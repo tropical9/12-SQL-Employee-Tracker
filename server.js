@@ -3,14 +3,22 @@ const inquirer = require ('inquirer');
 const mysql = require ('mysql2');
 
 const PORT = process.env.PORT || 3001;
+const app = express ();
 
+app.use(express.urlencoded({extended: false}));
+app.use (express.json());
 
-const connection = mysql.createConnection({
+const db = mysql.createConnection(
+  {
     host: 'localhost',
     user: 'root',
-    password: 'password',
+    password: 'passwordsql!',
     database: 'employees'
-  });
+  }
+
+  console.log ('Connected to employees database.')
+
+  );
 
 // WHEN I start the application
 // THEN I am presented with the following options: 
@@ -34,6 +42,13 @@ function startApplication() {
 
     }
   ])
+
+.then(answer => {
+  if (answer.choice == 'View All Employees') {
+    viewAllEmployees();
+  }
+
+})
 }
 // WHEN I choose to view all departments
 // THEN I am presented with a formatted table showing department names and department ids
@@ -46,7 +61,9 @@ function viewAllRoles
 // THEN I am presented with a formatted table showing employee data, 
 // including employee ids, first names, last names, job titles, departments, 
 // salaries, and managers that the employees report to
-function viewAllEmployees 
+function viewAllEmployees() {
+  db.query ()
+}
 // WHEN I choose to add a department
 // THEN I am prompted to enter the name of the department and that department is added to the database
 function addRole 
@@ -61,85 +78,3 @@ function updateRole
 // THEN I am prompted to select an employee to update and their new role and this information is updated in the database
 
 
-
-// inquirer
-//   .prompt([
-//     {
-//       type: 'list',
-//       name: 'action',
-//       message: 'What would you like to do?',
-//       choices: [
-//         'View all departments',
-//         'View all roles',
-//         'View all employees',
-//         'Add a department',
-//         'Add a role',
-//         'Add an employee',
-//         'Update an employee role',
-//         'Exit'
-//       ]
-//     }
-//   ])
-//   .then(answers => {
-//     switch (answers.action) {
-//       case 'View all departments':
-//         connection.query('SELECT * FROM departments', (err, res) => {
-//           if (err) throw err;
-//           console.table(res);
-//         });
-//         break;
-//       case 'View all roles':
-//         connection.query(
-//           'SELECT roles.id, roles.title, roles.salary, departments.name FROM roles JOIN departments ON roles.department_id = departments.id',
-//           (err, res) => {
-//             if (err) throw err;
-//             console.table(res);
-//           }
-//         );
-//         break;
-//       case 'View all employees':
-//         connection.query(
-//           'SELECT employees.id, employees.first_name, employees.last_name, roles.title, departments.name, roles.salary, CONCAT(managers.first_name, " ", managers.last_name) as manager FROM employees JOIN roles ON employees.role_id = roles.id JOIN departments ON roles.department_id = departments.id LEFT JOIN employees as managers ON employees.manager_id = managers.id',
-//           (err, res) => {
-//             if (err) throw err;
-//             console.table(res);
-//           }
-//         );
-//         break;
-//       case 'Add a department':
-//         inquirer
-//           .prompt([
-//             {
-//               type: 'input',
-//               name: 'name',
-//               message: 'Enter the name of the department:'
-//             }
-//           ])
-//           .then(answers => {
-//             connection.query(
-//               'INSERT INTO departments SET ?',
-//               {
-//                 name: answers.name
-//               },
-//               (err, res) => {
-//                 if (err) throw err;
-//                 console.log('Department added!');
-//               }
-//             );
-//           });
-//         break;
-//       case 'Add a role':
-//         inquirer
-//           .prompt([
-//             {
-//               type: 'input',
-//               name: 'title',
-//               message: 'Enter the title of the role:'
-//             },
-//             {
-//               type: 'input',
-//               name: 'salary',
-//               message: 'Enter the salary for the role:'
-//             },
-//             {
-//               type:
