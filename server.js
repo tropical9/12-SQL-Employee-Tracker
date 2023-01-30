@@ -1,6 +1,7 @@
 const express = require ('express');
 const inquirer = require ('inquirer');
 const mysql = require ('mysql2');
+const consoleTable = require ('console.table');
 
 const PORT = process.env.PORT || 3001;
 const app = express ();
@@ -14,7 +15,7 @@ const db = mysql.createConnection(
     user: 'root',
     password: 'passwordsql!',
     database: 'employees'
-  }
+  },
 
   console.log ('Connected to employees database.')
 
@@ -44,12 +45,29 @@ function startApplication() {
   ])
 
 .then(answer => {
-  if (answer.choice == 'View All Employees') {
+  if (answer.choice == 'View all departments') {
     viewAllEmployees();
+  } else if (answer.choice == 'View all roles') {
+    viewAllRoles();
+  } else if (answer.choice == 'View all employees') {
+    viewAllEmployees();
+  } else if (answer.choice == 'Add a department') {
+    addDepartment();
+  } else if (answer.choice == 'Add a role') {
+    addRole();
+  } else if (answer.choice == 'Add an employee') {
+    addEmployee();
+  } else if (answer.choice == 'Upldate and employee role') {
+    updateRole();
+  } else {
+    init();
   }
 
 })
-}
+};
+
+
+
 // WHEN I choose to view all departments
 // THEN I am presented with a formatted table showing department names and department ids
 function viewAllDepartment 
@@ -61,15 +79,15 @@ function viewAllRoles
 // THEN I am presented with a formatted table showing employee data, 
 // including employee ids, first names, last names, job titles, departments, 
 // salaries, and managers that the employees report to
-function viewAllEmployees() {
-  db.query ()
-}
+function viewAllEmployees()
 // WHEN I choose to add a department
 // THEN I am prompted to enter the name of the department and that department is added to the database
-function addRole 
+function addDepartment
 // WHEN I choose to add a role
 // THEN I am prompted to enter the name, salary, and department for the role 
 // and that role is added to the database
+function addRole 
+
 function addEmployee
 // WHEN I choose to add an employee
 // THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
